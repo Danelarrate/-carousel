@@ -4,11 +4,11 @@ class Carousel {
     this.options = {
       velocityScale: 0.05,
       friction: 0.99,
-      carouselZPos: 600,
+      carouselZPos: 754,
       inclination: 0,
       itemCount: 8,
       itemWidth: 300,
-      gap: 1,
+      gap: 1.7,
       ...options
     }
 
@@ -31,6 +31,26 @@ class Carousel {
   init() {
     this.generateItems()
     this.addEventListeners()
+    this.updateVisibility()
+  }
+  updateVisibility() {
+    this.items.forEach((item) => {
+      const itemRelativeRotation =
+        Math.abs(
+          this.currentRotation + parseFloat(item.getAttribute('data-rotation'))
+        ) % 360 // Normalizamos la rotación a [0, 360)
+
+      // Verificar si el ítem está en el rango visible de la mitad posterior
+      if (itemRelativeRotation < 90 || itemRelativeRotation > 270) {
+        // El rango visible no cruza el 0°
+        item.style.visibility = 'hidden'
+        item.style.pointerEvents = 'none'
+      } else {
+        // El rango visible cruza el 0°
+        item.style.visibility = ''
+        item.style.pointerEvents = 'auto'
+      }
+    })
   }
 
   generateItems() {
@@ -47,19 +67,24 @@ class Carousel {
         this.calcularRadio(itemCount, itemWidth) - itemWidth * gap
       }px)`
 
-      item.style.background = `url(https://picsum.photos/id/${i + 38}/700/300/)`
       item.style.transform = rotation
       item.style.width = `${itemWidth}px`
 
-      // Texto que aparece en hover
-      const text = document.createElement('div')
-      text.className = 'carousel-text hide'
-      text.textContent = `Item ${i + 1}`
-      item.appendChild(text)
+      const imgWrap = document.createElement('div')
+      const img = document.createElement('img')
+      img.src = `https://picsum.photos/id/${i + 38}/1920`
+      img.alt = 'photo ${i + 38}'
+      imgWrap.appendChild(img)
+      item.appendChild(imgWrap)
+      // // Texto que aparece en hover
+      // const text = document.createElement('div')
+      // text.className = 'carousel-text hide'
+      // text.textContent = `Item ${angle}`
+      // item.appendChild(text)
 
-      // Asignar los event listeners para cada item
-      item.addEventListener('mouseenter', this.handleMouseEnter)
-      item.addEventListener('mouseleave', this.handleMouseLeave)
+      // // Asignar los event listeners para cada item
+      // item.addEventListener('mouseenter', this.handleMouseEnter)
+      // item.addEventListener('mouseleave', this.handleMouseLeave)
 
       this.items.push(item) // Guardar referencia al item
 
@@ -82,7 +107,7 @@ class Carousel {
   handleMouseDown(e) {
     this.isDragging = true
     this.startX = e.clientX
-    hideTexts()
+    //hideTexts()
     cancelAnimationFrame(this.animationFrameId)
   }
 
@@ -95,6 +120,7 @@ class Carousel {
     this.currentRotation += this.velocity
     this.container.style.transform = `translateZ(${this.options.carouselZPos}px) rotateZ(-${this.options.inclination}) rotateY(${this.currentRotation}deg)`
     this.container.setAttribute('data-current-rotation', this.currentRotation)
+    this.updateVisibility()
   }
 
   handleMouseUp() {
@@ -111,10 +137,11 @@ class Carousel {
       this.animationFrameId = requestAnimationFrame(
         this.applyElasticEffect.bind(this)
       )
-      hideTexts()
+      //hideTexts()
     } else {
-      showTexts()
+      //showTexts()
     }
+    this.updateVisibility()
   }
 
   // Eventos de hover para los elementos
@@ -160,10 +187,10 @@ class Carousel {
 
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.querySelector('.carousel-content')
-  container.style.transform = `translateZ(600px) rotateY(0) rotateZ(-0)`
+  container.style.transform = `translateZ(754px) rotateY(0) rotateZ(-0)`
   const carousel = new Carousel('.carousel-content', {
-    itemCount: 8,
-    itemWidth: 300
+    itemCount: 12,
+    itemWidth: 536
   })
 
   window.addEventListener('beforeunload', () => {

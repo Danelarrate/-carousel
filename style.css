@@ -13,57 +13,69 @@ body,
 
 .carousel {
     position: absolute;
-
     top: 50%;
-
     left: 50%;
-
     width: 190px;
-
     height: 300px;
-
     margin: 0;
-
-    perspective: 1000px;
-
-    transform: translate(-50%, -50%) rotateZ(-5deg);
+    perspective: 2000px;
+    transform: translate(-50%, -50%) rotateZ(5deg);
 }
 
 .carousel-content {
     position: absolute;
-
     width: 100%;
-
     height: 100%;
-
     -webkit-transform-style: preserve-3d;
-
     transform-style: preserve-3d;
+
 }
 
 .carousel-item {
     user-select: none;
     position: absolute;
-
+    user-select: none;
     top: 0;
-
     left: 0;
     aspect-ratio: 1/1;
-
+    z-index: 100;
     transform-style: preserve-3d;
-    border-radius: 6px;
+    border-radius: 2rem;
+    background-repeat: no-repeat !important;
+    transform-origin: center;
+    background-size: cover !important;
+
+}
+
+.carousel-item div {
+    border-radius: inherit;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.carousel-item img {
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    transition: transform 3s cubic-bezier(.19, 1, .22, 1);
+}
+
+.carousel-item:hover img {
+    transform: scale(1.2);
 }
 
 .carousel-text {
     position: absolute;
     transform-style: preserve-3d;
-    top: 50%;
-    left: 50%;
+    height: 100%;
     /* Debajo del ítem */
     color: white;
     font-size: 14px;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 4px 8px;
+    background: rgba(128, 23, 23, 0.7);
+    left: 0;
+    right: 0;
     border-radius: 4px;
 }
 
